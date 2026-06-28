@@ -20,11 +20,14 @@ Los datos maestros viven aquí (SQLite). El flujo dinámico de turnos
 import sqlite3
 import os
 
-RUTA_DB = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "data", "clinica.db"
-)
-
+if os.environ.get("RENDER"):
+    RUTA_DB = "/tmp/clinica.db"
+else:
+    RUTA_DB = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "data", "clinica.db"
+    )
+    os.makedirs(os.path.dirname(RUTA_DB), exist_ok=True)
 
 def obtener_conexion():
     """Abre una conexión SQLite con filas accesibles por nombre."""
