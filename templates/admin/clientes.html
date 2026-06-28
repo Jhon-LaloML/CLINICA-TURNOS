@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titulo %}Clientes{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="seccion-cabecera">
+    <div>
+        <h3>Clientes registrados</h3>
+        <p style="color:var(--texto-suave); font-size:14px; margin-top:4px;">Todos los pacientes del sistema. Puede editar sus datos.</p>
+    </div>
+    <span class="pill">{{ clientes|length }} en total</span>
+</div>
+
+{% if clientes %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>CI</th>
+            <th>Teléfono</th>
+            <th>Usuario</th>
+            <th style="width:120px;">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in clientes %}
+        <tr>
+            <td><strong>{{ c.nombre_completo }}</strong></td>
+            <td>{{ c.ci }}</td>
+            <td>{{ c.telefono or "—" }}</td>
+            <td>{{ c.username or "—" }}</td>
+            <td>
+                <a href="{{ url_for('admin_cliente_editar_form', cliente_id=c.id) }}"
+                   class="boton boton-secundario boton-sm">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado">Aún no hay clientes registrados. Los registra la recepcionista.</div>
+{% endif %}
+{% endblock %}

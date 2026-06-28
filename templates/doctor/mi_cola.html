@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block titulo %}Mi consultorio{% endblock %}
+{% block contenido %}
+{% include "doctor/_submenu.html" %}
+<div class="seccion-cabecera">
+    <div><h3>Consultorio {{ consultorio.consultorio_numero }} — {{ consultorio.especialidad }}</h3>
+    <p style="color:var(--texto-suave); font-size:14px; margin-top:4px;">Dr(a). {{ doctor.nombre_completo }} · Horario: {{ consultorio.hora_inicio }} - {{ consultorio.hora_fin }}</p></div>
+    <div>
+        {% if estado == ESTADO_ATENDIENDO %}<span class="tag" style="background:var(--verde-claro); color:#1d6b3c;">Atendiendo</span>
+        {% elif estado == ESTADO_NO_RECIBE %}<span class="tag" style="background:var(--ambar-claro); color:#8a5410;">No recibe más</span>
+        {% else %}<span class="tag" style="background:#e9ecef; color:#6c757d;">Jornada finalizada</span>{% endif %}
+    </div>
+</div>
+
+<div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:24px;">
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ en_espera }}</div><div class="stat-label">En espera</div></div>
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ prioritaria|length }}</div><div class="stat-label">Prioritarios</div></div>
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ regular|length }}</div><div class="stat-label">Regulares</div></div>
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ atendidos_hoy }}</div><div class="stat-label">Atendidos hoy</div></div>
+</div>
+
+{% if actual %}
+<div class="panel" style="border:2px solid var(--teal-500);">
+    <div style="font-size:13px; color:var(--texto-suave); letter-spacing:1px; margin-bottom:14px;">PACIENTE EN ATENCIÓN</div>
+    <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <div style="background:var(--teal-100); color:var(--teal-700); font-size:32px; font-weight:700; padding:12px 22px; border-radius:12px;">{{ actual.codigo }}</div>
+        <div style="flex:1; min-width:200px;">
+            <div style="font-size:19px; font-weight:600;">{{ actual.cliente_nombre }}</div>
+            <div style="font-size:14px; color:var(--texto-suave);">CI: {{ actual.cliente_ci }}</div>
+            {% if actual.motivo %}<div style="font-size:14px; color:var(--texto-suave);">Motivo: {{ actual.motivo }}</div>{% endif %}
+            <div style="margin-top:6px;">{% if actual.tipo == "prioritario" %}<span class="tag tag-prioritario">PRIORITARIO</span>{% else %}<span class="tag tag-regular">REGULAR</span>{% endif %}</div>
+        </div>
+    </div>
+    <form action="{{ url_for('doctor_marcar_atendido') }}" method="POST">
+        <div class="campo"><label>Diagnóstico / observación (opcional)</label><textarea name="diagnostico" rows="2" placeholder="Anote el resultado de la consulta..."></textarea></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="submit" class="boton boton-verde">Marcar atendido</button>
+    </form>
+        <form action="{{ url_for('doctor_marcar_ausente') }}" method="POST" onsubmit="return confirm('¿Marcar ausente a {{ actual.codigo }}?');" style="display:inline;">
+            <button type="submit" class="boton boton-peligro">Marcar ausente</button>
+        </form>
+        </div>
+</div>
+{% else %}
+<div class="vacio-estado" style="margin-bottom:24px;">
+    {% if estado == ESTADO_FINALIZADO %}
+        <p><strong>Jornada finalizada.</strong> Atendió a todos los pacientes.</p>
+    {% elif proximo %}
+        <p style="margin-bottom:16px;">No hay ningún paciente en atención.</p>
+        <form action="{{ url_for('doctor_llamar_siguiente') }}" method="POST">
+            <button type="submit" class="boton boton-primario boton-grande">Llamar al siguiente paciente</button>
+        </form>
+    {% else %}
+        <p>No hay pacientes en espera por ahora.</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="seccion-cabecera" style="margin-top:8px;">
+    <h3 style="font-size:17px;">Cola de espera</h3>
+    <div>
+        {% if estado == ESTADO_ATENDIENDO %}
+        <form action="{{ url_for('doctor_cerrar_inscripciones') }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Dejar de aceptar pacientes nuevos?');">
+            <button type="submit" class="boton boton-secundario boton-sm">No aceptar más pacientes</button>
+        </form>
+        {% elif estado == ESTADO_NO_RECIBE %}
+        <form action="{{ url_for('doctor_reabrir_inscripciones') }}" method="POST" style="display:inline;">
+            <button type="submit" class="boton boton-secundario boton-sm">Reabrir inscripciones</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% if prioritaria %}
+<div style="font-size:13px; font-weight:700; color:var(--coral); margin:14px 0 8px;">PRIORITARIOS ({{ prioritaria|length }})</div>
+{% for item in prioritaria %}
+<div class="panel" style="padding:12px 14px; margin-bottom:8px; border-left:4px solid var(--coral); display:flex; gap:12px; align-items:center;">
+    <span style="font-weight:700; color:var(--teal-700); min-width:70px;">{{ item.codigo }}</span>
+    <span style="flex:1;">{{ item.cliente_nombre }}{% if item.motivo %}<br><small style="color:var(--texto-tenue);">{{ item.motivo }}</small>{% endif %}</span>
+    {% if loop.first %}<span class="tag tag-prioritario">Siguiente</span>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if regular %}
+<div style="font-size:13px; font-weight:700; color:var(--texto-suave); margin:14px 0 8px;">REGULARES ({{ regular|length }})</div>
+{% for item in regular %}
+<div class="panel" style="padding:12px 14px; margin-bottom:8px; display:flex; gap:12px; align-items:center; {% if loop.first and not prioritaria %}background:#fffbea; border-color:var(--ambar);{% endif %}">
+    <span style="font-weight:700; color:var(--teal-700); min-width:70px;">{{ item.codigo }}</span>
+    <span style="flex:1;">{{ item.cliente_nombre }}{% if item.motivo %}<br><small style="color:var(--texto-tenue);">{{ item.motivo }}</small>{% endif %}</span>
+    {% if loop.first and not prioritaria %}<span class="tag tag-regular">Siguiente</span>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if not prioritaria and not regular %}
+<div class="vacio-estado">No hay pacientes en espera.</div>
+{% endif %}
+{% endblock %}

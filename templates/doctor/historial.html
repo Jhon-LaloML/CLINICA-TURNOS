@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Mi historial{% endblock %}
+{% block contenido %}
+{% include "doctor/_submenu.html" %}
+<div class="hero"><h2>Mi historial de hoy</h2><p>Consultorio {{ consultorio.consultorio_numero }} — {{ consultorio.especialidad }}. Del más reciente al más antiguo (Pila LIFO).</p></div>
+<div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:24px;">
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ total }}</div><div class="stat-label">Total</div></div>
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ atendidos }}</div><div class="stat-label">Atendidos</div></div>
+    <div class="stat-tarjeta" style="flex:1; min-width:110px;"><div class="stat-numero">{{ ausentes }}</div><div class="stat-label">Ausentes</div></div>
+</div>
+{% if registros %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead><tr><th>#</th><th>Código</th><th>Paciente</th><th>Tipo</th><th>Estado</th></tr></thead>
+    <tbody>
+        {% for r in registros %}
+        <tr {% if r.estado_final == 'ausente' %}style="opacity:0.6;"{% endif %}>
+            <td>{{ loop.index }}</td>
+            <td><strong>{{ r.codigo }}</strong></td>
+            <td>{{ r.cliente_nombre }}</td>
+            <td>{% if r.tipo == "prioritario" %}<span class="tag tag-prioritario">PRIORITARIO</span>{% else %}<span class="tag tag-regular">REGULAR</span>{% endif %}</td>
+            <td>{% if r.estado_final == "atendido" %}<span class="tag" style="background:var(--verde-claro); color:#1d6b3c;">Atendido</span>{% else %}<span class="tag" style="background:var(--coral-claro); color:#9e3322;">Ausente</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado">Aún no ha atendido a ningún paciente hoy.</div>
+{% endif %}
+{% endblock %}

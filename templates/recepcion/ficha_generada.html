@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Ficha generada{% endblock %}
+{% block contenido %}
+{% include "recepcion/_submenu.html" %}
+<div class="hero" style="text-align:center;"><h2>Ficha generada correctamente</h2></div>
+<div style="max-width:420px; margin:0 auto; background:var(--blanco); border:2px dashed var(--teal-500); border-radius:16px; padding:32px; text-align:center; box-shadow:var(--sombra-media);">
+    <div style="font-size:13px; color:var(--texto-tenue); letter-spacing:1px;">CLÍNICA SAN GABRIEL</div>
+    <div style="font-size:56px; font-weight:700; color:var(--teal-700); line-height:1; margin:12px 0;">{{ ficha.codigo }}</div>
+    {% if ficha.es_prioritario %}<span class="tag tag-prioritario">PRIORITARIO</span>{% else %}<span class="tag tag-regular">REGULAR</span>{% endif %}
+    <div style="margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Paciente</span><span style="font-weight:600;">{{ ficha.cliente_nombre }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Consultorio</span><span style="font-weight:600;">Consultorio {{ ficha.consultorio_numero }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Personas antes</span><span style="font-weight:600;">{{ faltan if faltan is not none else 0 }}</span></div>
+    </div>
+</div>
+<div style="text-align:center; margin-top:24px; display:flex; gap:10px; justify-content:center;">
+    <a href="{{ url_for('recepcion_buscar_cliente') }}" class="boton boton-primario">Atender otro cliente</a>
+    <a href="{{ url_for('recepcion_dashboard') }}" class="boton boton-secundario">Ver tablero</a>
+</div>
+{% endblock %}

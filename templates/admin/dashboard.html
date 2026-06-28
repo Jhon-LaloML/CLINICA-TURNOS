@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Panel del Administrador{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero">
+    <h2>Panel del Administrador</h2>
+    <p>Configure las especialidades, consultorios, empleados y horarios de la clínica.</p>
+</div>
+<div class="stats-grid">
+    <div class="stat-tarjeta"><div class="stat-numero">{{ total_especialidades }}</div><div class="stat-label">Especialidades</div></div>
+    <div class="stat-tarjeta"><div class="stat-numero">{{ total_consultorios }}</div><div class="stat-label">Consultorios</div></div>
+    <div class="stat-tarjeta"><div class="stat-numero">{{ total_doctores }}</div><div class="stat-label">Doctores</div></div>
+    <div class="stat-tarjeta"><div class="stat-numero">{{ total_recepcionistas }}</div><div class="stat-label">Recepcionistas</div></div>
+</div>
+<div class="panel">
+    <div class="panel-titulo">Primeros pasos</div>
+    <ol style="margin: 14px 0 0 20px; color: var(--texto); font-size: 14px; line-height: 1.9;">
+        <li>Cree las <a class="enlace-tenue" href="{{ url_for('admin_especialidades') }}">especialidades</a>.</li>
+        <li>Cree los <a class="enlace-tenue" href="{{ url_for('admin_consultorios') }}">consultorios</a>.</li>
+        <li>Registre los <a class="enlace-tenue" href="{{ url_for('admin_empleados') }}">empleados</a> (doctores y recepcionistas).</li>
+        <li>Asigne los <a class="enlace-tenue" href="{{ url_for('admin_horarios') }}">horarios</a> de cada doctor.</li>
+    </ol>
+</div>
+{% endblock %}

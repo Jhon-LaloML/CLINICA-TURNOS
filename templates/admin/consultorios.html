@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Consultorios{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero"><h2>Consultorios</h2><p>Los espacios físicos de atención. Cada cola pertenece a un consultorio.</p></div>
+<div class="form-inline">
+    <form action="{{ url_for('admin_consultorio_crear') }}" method="POST">
+        <div class="form-inline-grid">
+            <div class="campo"><label>Número</label><input type="text" name="numero" placeholder="Ej. 1" required></div>
+            <div class="campo"><label>Ubicación (opcional)</label><input type="text" name="ubicacion"></div>
+            <button type="submit" class="boton boton-primario">Agregar</button>
+        </div>
+    </form>
+</div>
+{% if consultorios %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead><tr><th>Consultorio</th><th>Ubicación</th><th style="width:240px;">Acciones</th></tr></thead>
+    <tbody>
+        {% for c in consultorios %}
+        <tr>
+            <td><strong>Consultorio {{ c.numero }}</strong></td>
+            <td>{{ c.ubicacion or "—" }}</td>
+            <td>
+                <form action="{{ url_for('admin_consultorio_eliminar', consultorio_id=c.id) }}" method="POST"
+                      onsubmit="return confirm('¿Eliminar el Consultorio {{ c.numero }}?');">
+                    <button type="submit" class="boton boton-peligro boton-sm">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado">Aún no hay consultorios. Agregue el primero arriba.</div>
+{% endif %}
+{% endblock %}

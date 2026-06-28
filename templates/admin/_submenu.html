@@ -1,0 +1,8 @@
+<nav class="submenu">
+    <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}activo{% endif %}">Inicio</a>
+    <a href="{{ url_for('admin_especialidades') }}" class="{% if request.endpoint == 'admin_especialidades' %}activo{% endif %}">Especialidades</a>
+    <a href="{{ url_for('admin_consultorios') }}" class="{% if request.endpoint == 'admin_consultorios' %}activo{% endif %}">Consultorios</a>
+    <a href="{{ url_for('admin_empleados') }}" class="{% if request.endpoint in ['admin_empleados','admin_empleado_nuevo_form','admin_doctor_editar_form','admin_recepcionista_editar_form'] %}activo{% endif %}">Empleados</a>
+    <a href="{{ url_for('admin_clientes') }}" class="{% if request.endpoint in ['admin_clientes','admin_cliente_editar_form'] %}activo{% endif %}">Clientes</a>
+    <a href="{{ url_for('admin_horarios') }}" class="{% if request.endpoint in ['admin_horarios','admin_horarios_doctor'] %}activo{% endif %}">Horarios</a>
+</nav>

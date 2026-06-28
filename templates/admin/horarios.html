@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Horarios{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero"><h2>Horarios de trabajo</h2><p>Seleccione un doctor para gestionar sus horarios de atención.</p></div>
+{% if doctores %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead><tr><th>Doctor</th><th>Especialidad</th><th style="width:160px;">Acción</th></tr></thead>
+    <tbody>
+        {% for d in doctores %}
+        <tr>
+            <td><strong>{{ d.nombre_completo }}</strong></td>
+            <td><span class="pill">{{ d.especialidad_nombre }}</span></td>
+            <td><a href="{{ url_for('admin_horarios_doctor', doctor_id=d.id) }}" class="boton boton-secundario boton-sm">Gestionar horarios</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado">Aún no hay doctores. Registre uno en la sección Empleados.</div>
+{% endif %}
+{% endblock %}

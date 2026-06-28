@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Mi consultorio{% endblock %}
+{% block contenido %}
+{% include "doctor/_submenu.html" %}
+<div class="hero"><h2>Mi consultorio</h2></div>
+<div class="vacio-estado">
+    {% if motivo == "sin_horario" %}
+        <strong>Hoy ({{ dia_actual }}) no tiene un consultorio asignado.</strong><br><br>
+        Según sus horarios, no le corresponde atender hoy. Si es un error, contacte al administrador.
+    {% else %}
+        <strong>No se encontró su perfil de doctor.</strong><br><br>Contacte al administrador.
+    {% endif %}
+</div>
+{% endblock %}

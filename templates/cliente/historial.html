@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Mi historial{% endblock %}
+{% block contenido %}
+{% include "cliente/_submenu.html" %}
+<div class="hero"><h2>Mi historial de atenciones</h2><p>Todas tus visitas a la clínica, de la más reciente a la más antigua.</p></div>
+{% if registros %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead><tr><th>Fecha</th><th>Código</th><th>Doctor</th><th>Especialidad</th><th>Motivo</th><th>Estado</th></tr></thead>
+    <tbody>
+        {% for r in registros %}
+        <tr>
+            <td>{{ r.hora_registro[:16] }}</td>
+            <td><strong>{{ r.codigo }}</strong></td>
+            <td>{{ ('Dr(a). ' ~ r.doctor_nombre) if r.doctor_nombre else "—" }}</td>
+            <td>{{ r.especialidad_nombre or "—" }}</td>
+            <td>{{ r.motivo or "—" }}</td>
+            <td>
+                {% if r.estado == "atendido" %}<span class="tag" style="background:var(--verde-claro); color:#1d6b3c;">Atendido</span>
+                {% elif r.estado == "ausente" %}<span class="tag" style="background:var(--coral-claro); color:#9e3322;">Ausente</span>
+                {% elif r.estado == "en_espera" %}<span class="tag" style="background:var(--azul-claro); color:#1d4e7d;">En espera</span>
+                {% else %}<span class="tag" style="background:var(--ambar-claro); color:#8a5410;">{{ r.estado }}</span>{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% if registros and registros[0].diagnostico %}
+<div class="panel" style="margin-top:20px;">
+    <div class="panel-titulo" style="margin-bottom:8px;">Última observación del doctor</div>
+    <p style="color:var(--texto-suave); font-size:14px;">{{ registros[0].diagnostico }}</p>
+</div>
+{% endif %}
+{% else %}
+<div class="vacio-estado">Aún no tienes atenciones registradas.</div>
+{% endif %}
+{% endblock %}

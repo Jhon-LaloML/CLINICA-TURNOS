@@ -1,0 +1,435 @@
+/* =================================================================
+   Sistema de Gestión de Turnos — Clínica San Gabriel
+   CSS con diseño responsivo completo (móvil, tablet, escritorio)
+   ================================================================= */
+
+:root {
+    --teal-900: #0a3d38;
+    --teal-800: #0a5c54;
+    --teal-700: #0d6e66;
+    --teal-600: #11857b;
+    --teal-500: #16a093;
+    --teal-100: #d2efec;
+    --teal-50:  #eef8f7;
+
+    --verde:       #2a9d54;
+    --verde-claro: #e4f5ea;
+    --coral:       #e8553c;
+    --coral-claro: #fbe5e0;
+    --ambar:       #d68a1f;
+    --ambar-claro: #fbf0db;
+    --azul-claro:  #e3eef9;
+
+    --texto:       #1f2933;
+    --texto-suave: #52606d;
+    --texto-tenue: #9aa5b1;
+    --borde:       #e1e5ea;
+    --fondo:       #f5f7f9;
+    --blanco:      #ffffff;
+
+    --radio:    12px;
+    --radio-sm: 8px;
+    --sombra:       0 1px 3px rgba(0,0,0,0.06);
+    --sombra-media: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+/* ----------------------------------------------------------------
+   RESET Y BASE
+   ---------------------------------------------------------------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    line-height: 1.55;
+    font-size: 15px;
+    min-height: 100vh;
+}
+
+/* ----------------------------------------------------------------
+   TOPBAR (cabecera)
+   ---------------------------------------------------------------- */
+.topbar {
+    background: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+    padding: 0 20px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 12px;
+}
+.topbar-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;          /* permite que se encoja */
+}
+.topbar-logo {
+    width: 38px; height: 38px;
+    background: var(--teal-600);
+    color: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700;
+    flex-shrink: 0;
+}
+.topbar-titulo {
+    font-size: 16px; font-weight: 700; color: var(--teal-900);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-sub { font-size: 11px; color: var(--texto-tenue); white-space: nowrap; }
+
+.topbar-derecha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+.topbar-usuario { text-align: right; }
+.topbar-usuario-nombre { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.topbar-usuario-rol {
+    font-size: 11px; color: var(--teal-600);
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* En móvil: ocultar el subtítulo y texto "Mi cuenta" */
+@media (max-width: 600px) {
+    .topbar { padding: 0 12px; height: 56px; }
+    .topbar-sub { display: none; }
+    .topbar-usuario { display: none; }
+    .topbar-logo { width: 34px; height: 34px; font-size: 20px; }
+    .topbar-titulo { font-size: 14px; }
+    .topbar-derecha { gap: 6px; }
+}
+@media (max-width: 380px) {
+    .topbar-titulo { max-width: 120px; }
+}
+
+/* ----------------------------------------------------------------
+   CONTENEDOR
+   ---------------------------------------------------------------- */
+.contenedor {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+@media (max-width: 600px) {
+    .contenedor { padding: 16px 12px; }
+}
+
+/* ----------------------------------------------------------------
+   HERO
+   ---------------------------------------------------------------- */
+.hero { margin-bottom: 20px; }
+.hero h2 { font-size: 22px; font-weight: 700; color: var(--teal-900); margin-bottom: 4px; }
+.hero p  { color: var(--texto-suave); font-size: 14px; }
+@media (max-width: 600px) {
+    .hero h2 { font-size: 19px; }
+}
+
+/* ----------------------------------------------------------------
+   SUBMENÚ
+   ---------------------------------------------------------------- */
+.submenu {
+    display: flex;
+    gap: 2px;
+    flex-wrap: nowrap;          /* no romper línea: scroll horizontal */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--borde);
+    scrollbar-width: none;
+}
+.submenu::-webkit-scrollbar { display: none; }
+.submenu a {
+    padding: 10px 16px;
+    text-decoration: none;
+    color: var(--texto-suave);
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+}
+.submenu a:hover { color: var(--teal-600); }
+.submenu a.activo { color: var(--teal-700); border-bottom-color: var(--teal-600); }
+
+/* ----------------------------------------------------------------
+   BOTONES
+   ---------------------------------------------------------------- */
+.boton {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 10px 16px;
+    border: none; border-radius: var(--radio-sm);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all 0.15s;
+    font-family: inherit; white-space: nowrap;
+}
+.boton-primario   { background: var(--teal-600); color: #fff; }
+.boton-primario:hover { background: var(--teal-700); }
+.boton-secundario { background: var(--blanco); color: var(--teal-700); border: 1px solid var(--borde); }
+.boton-secundario:hover { border-color: var(--teal-500); }
+.boton-peligro    { background: var(--coral); color: #fff; }
+.boton-peligro:hover { background: #d2402a; }
+.boton-verde      { background: var(--verde); color: #fff; }
+.boton-verde:hover { background: #25864c; }
+.boton-ambar      { background: var(--ambar); color: #fff; }
+.boton-ambar:hover { background: #c47f1f; }
+.boton-sm     { padding: 6px 12px; font-size: 13px; }
+.boton-grande { padding: 13px 24px; font-size: 15px; }
+
+@media (max-width: 480px) {
+    .boton-grande { width: 100%; }
+}
+
+/* ----------------------------------------------------------------
+   FORMULARIOS
+   ---------------------------------------------------------------- */
+.campo { margin-bottom: 16px; }
+.campo label {
+    display: block; font-size: 14px; font-weight: 500;
+    margin-bottom: 6px; color: var(--texto);
+}
+.campo input,
+.campo select,
+.campo textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--borde); border-radius: var(--radio-sm);
+    font-size: 15px; font-family: inherit; background: var(--blanco);
+    -webkit-appearance: none;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none; border-color: var(--teal-500);
+    box-shadow: 0 0 0 3px var(--teal-50);
+}
+
+/* Dos columnas → una en móvil */
+.form-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 560px) { .form-fila { grid-template-columns: 1fr; } }
+
+.form-inline-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 12px;
+    align-items: end;
+}
+@media (max-width: 640px) { .form-inline-grid { grid-template-columns: 1fr; } }
+.form-inline .campo { margin-bottom: 0; }
+
+.form-tarjeta {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 24px;
+    box-shadow: var(--sombra); max-width: 680px;
+}
+.form-inline {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 18px;
+    box-shadow: var(--sombra); margin-bottom: 20px;
+}
+.form-botones {
+    display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--borde);
+}
+@media (max-width: 480px) {
+    .form-tarjeta { padding: 16px; }
+    .form-botones { justify-content: stretch; }
+    .form-botones .boton { flex: 1; justify-content: center; }
+}
+
+/* ----------------------------------------------------------------
+   PANEL / TARJETA
+   ---------------------------------------------------------------- */
+.panel {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 20px;
+    box-shadow: var(--sombra); margin-bottom: 16px;
+}
+.panel-titulo { font-size: 16px; font-weight: 600; color: var(--teal-900); }
+
+/* ----------------------------------------------------------------
+   ESTADÍSTICAS
+   ---------------------------------------------------------------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.stat-tarjeta {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 18px;
+    box-shadow: var(--sombra);
+}
+.stat-numero { font-size: 32px; font-weight: 700; color: var(--teal-700); line-height: 1; }
+.stat-label  { font-size: 13px; color: var(--texto-suave); margin-top: 6px; }
+
+/* ----------------------------------------------------------------
+   TABLAS RESPONSIVAS
+   ---------------------------------------------------------------- */
+.tabla-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+.tabla {
+    width: 100%;
+    min-width: 480px;           /* fuerza scroll en vez de aplastarse */
+    border-collapse: collapse;
+    background: var(--blanco);
+    font-size: 14px;
+}
+.tabla thead { background: var(--teal-50); }
+.tabla th {
+    text-align: left; padding: 11px 14px;
+    font-weight: 600; color: var(--teal-800);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+.tabla td { padding: 11px 14px; border-top: 1px solid var(--borde); }
+.tabla tbody tr:hover { background: var(--teal-50); }
+
+/* ----------------------------------------------------------------
+   ENCABEZADO DE SECCIÓN
+   ---------------------------------------------------------------- */
+.seccion-cabecera {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+.seccion-cabecera h3 { font-size: 18px; font-weight: 600; color: var(--teal-900); }
+
+/* ----------------------------------------------------------------
+   ACCIONES EN FILA
+   ---------------------------------------------------------------- */
+.acciones-fila { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ----------------------------------------------------------------
+   ESTADO VACÍO
+   ---------------------------------------------------------------- */
+.vacio-estado {
+    text-align: center; padding: 36px 16px; color: var(--texto-tenue);
+    background: var(--blanco); border: 1px dashed var(--borde);
+    border-radius: var(--radio);
+}
+
+/* ----------------------------------------------------------------
+   MENSAJES FLASH
+   ---------------------------------------------------------------- */
+.flash {
+    padding: 11px 14px; border-radius: var(--radio-sm);
+    margin-bottom: 14px; font-size: 14px; border-left: 4px solid;
+}
+.flash-success { background: var(--verde-claro); border-color: var(--verde);       color: #1d6b3c; }
+.flash-danger  { background: var(--coral-claro); border-color: var(--coral);       color: #9e3322; }
+.flash-warning { background: var(--ambar-claro); border-color: var(--ambar);       color: #8a5410; }
+.flash-info    { background: var(--azul-claro);  border-color: #3f7cc4;            color: #1d4e7d; }
+
+/* ----------------------------------------------------------------
+   ETIQUETAS / PILLS
+   ---------------------------------------------------------------- */
+.tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; letter-spacing: 0.3px;
+}
+.tag-prioritario { background: var(--coral);  color: #fff; }
+.tag-regular     { background: #6c8a98;       color: #fff; }
+.pill {
+    display: inline-block; background: var(--teal-100); color: var(--teal-700);
+    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 12px;
+}
+
+/* ----------------------------------------------------------------
+   FOOTER — centrado y con fondo teal oscuro
+   Nota: para quitarlo, eliminá la línea del footer en base.html
+   ---------------------------------------------------------------- */
+.footer {
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    background: var(--teal-900);
+    margin-top: 40px;
+    line-height: 1.6;
+}
+@media (max-width: 600px) {
+    .footer { font-size: 12px; padding: 14px 12px; margin-top: 24px; }
+}
+
+/* ----------------------------------------------------------------
+   ENLACE TENUE
+   ---------------------------------------------------------------- */
+a.enlace-tenue { color: var(--teal-600); }
+
+/* ================================================================
+   VISTA DEL CLIENTE — optimizada para móvil
+   ================================================================ */
+.paciente-wrap { max-width: 480px; }
+
+.mi-ticket {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: 16px; padding: 24px 20px; text-align: center;
+    box-shadow: var(--sombra-media); margin-bottom: 16px;
+}
+.mi-ticket-label {
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--texto-tenue); margin-bottom: 8px;
+}
+.mi-ticket-codigo {
+    font-size: 48px; font-weight: 800;
+    color: var(--teal-700); line-height: 1; margin-bottom: 10px;
+}
+.mi-ticket-tags { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; }
+
+.estado-ticket {
+    border-radius: 12px; padding: 14px; margin: 14px 0;
+    text-align: center; font-size: 15px;
+}
+.estado-espera  { background: var(--azul-claro);  color: #1d4e7d; }
+.estado-turno   {
+    background: var(--verde-claro); color: #1d6b3c;
+    font-weight: 600; font-size: 16px;
+    animation: pulso 1.5s ease-in-out infinite;
+}
+@keyframes pulso {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.02); }
+}
+.faltan-grande { font-size: 40px; font-weight: 800; color: var(--teal-700); line-height: 1; }
+.faltan-label  { font-size: 13px; color: var(--texto-suave); }
+
+.ticket-filas { margin-top: 8px; }
+.ticket-fila {
+    display: flex; justify-content: space-between;
+    padding: 9px 0; border-top: 1px solid var(--borde); font-size: 14px;
+}
+.ticket-fila .lbl { color: var(--texto-suave); }
+.ticket-fila .val { font-weight: 600; text-align: right; }
+.auto-refresh-nota { text-align: center; font-size: 12px; color: var(--texto-tenue); margin-top: 6px; }
+
+/* Lista de doctores (vista cliente) */
+.doc-lista { display: flex; flex-direction: column; gap: 10px; }
+.doc-card {
+    background: var(--blanco); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 14px;
+    box-shadow: var(--sombra);
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 10px;
+}
+.doc-card.inactivo { opacity: 0.6; }
+.doc-card-nombre  { font-size: 15px; font-weight: 600; color: var(--texto); }
+.doc-card-esp     { font-size: 13px; color: var(--teal-600); }
+.doc-card-horario { font-size: 12px; color: var(--texto-tenue); margin-top: 2px; }
+.doc-estado {
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 10px; white-space: nowrap;
+}
+.doc-hoy    { background: var(--verde-claro); color: #1d6b3c; }
+.doc-no-hoy { background: #e9ecef; color: #6c757d; }

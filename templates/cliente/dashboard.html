@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+{% include "cliente/_submenu.html" %}
+<div class="hero"><h2>Hola, {{ cliente.nombre }}</h2><p>Bienvenido al sistema de turnos de la clínica.</p></div>
+
+{% if ficha %}
+<div class="panel" style="border-left:4px solid var(--teal-500); margin-bottom:24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+            <div style="font-size:13px; color:var(--texto-tenue); letter-spacing:1px;">TU FICHA DE HOY</div>
+            <div style="font-size:36px; font-weight:800; color:var(--teal-700); line-height:1.1;">{{ ficha.codigo }}</div>
+            <div style="font-size:14px; color:var(--texto-suave);">Consultorio {{ ficha.consultorio_numero }}{% if consultorio_info %} — Dr(a). {{ consultorio_info.doctor_nombre }}{% endif %}</div>
+        </div>
+        <div style="text-align:center;">
+            {% if ficha.estado == "atendiendo" %}
+            <div style="background:var(--verde-claro); color:#1d6b3c; padding:16px 24px; border-radius:12px; font-weight:600;">¡Es tu turno!<br>Dirígete al consultorio</div>
+            {% else %}
+            <div style="font-size:40px; font-weight:800; color:var(--teal-700);">{{ faltan if faltan is not none else 0 }}</div>
+            <div style="font-size:13px; color:var(--texto-suave);">personas antes que tú</div>
+            {% endif %}
+        </div>
+    </div>
+    <div style="margin-top:16px;"><a href="{{ url_for('cliente_mi_ficha') }}" class="boton boton-primario">Ver detalle de mi ficha →</a></div>
+</div>
+{% else %}
+<div class="panel" style="margin-bottom:24px;">
+    <strong>No tienes una ficha activa hoy.</strong>
+    <p style="color:var(--texto-suave); font-size:14px; margin-top:4px;">Acércate a recepción para que te asignen un turno.</p>
+</div>
+{% endif %}
+
+<div class="panel">
+    <div class="panel-titulo" style="margin-bottom:12px;">Información de la clínica</div>
+    {% if clinica %}
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Nombre</span><span style="font-weight:600;">{{ clinica.nombre }}</span></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Dirección</span><span style="font-weight:600;">{{ clinica.direccion }}</span></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Teléfono</span><span style="font-weight:600;">{{ clinica.telefono }}</span></div>
+    {% endif %}
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Doctores disponibles</span><span style="font-weight:600;">{{ total_doctores }}</span></div>
+    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Día</span><span style="font-weight:600;">{{ dia_actual }}</span></div>
+</div>
+{% endblock %}

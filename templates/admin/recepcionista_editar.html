@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Editar recepcionista{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero">
+    <h2>Editar recepcionista</h2>
+    <p>Modificando datos de <strong>{{ recep.nombre_completo }}</strong></p>
+</div>
+<div class="form-tarjeta">
+    <form action="{{ url_for('admin_recepcionista_editar', recep_id=recep.id) }}" method="POST">
+        <div class="form-fila">
+            <div class="campo">
+                <label>Nombre <span style="color:var(--coral)">*</span></label>
+                <input type="text" name="nombre" value="{{ recep.nombre }}" required>
+            </div>
+            <div class="campo">
+                <label>Apellido <span style="color:var(--coral)">*</span></label>
+                <input type="text" name="apellido" value="{{ recep.apellido }}" required>
+            </div>
+        </div>
+        <div class="form-fila">
+            <div class="campo">
+                <label>Teléfono</label>
+                <input type="tel" name="telefono" value="{{ recep.ci or '' }}">
+            </div>
+            <div class="campo">
+                <label>Turno</label>
+                <input type="text" name="turno" value="{{ recep.turno or '' }}" placeholder="Ej. Mañana">
+            </div>
+        </div>
+        <div class="campo">
+            <label>Área</label>
+            <input type="text" name="area" value="{{ recep.area or '' }}" placeholder="Ej. Recepción general">
+        </div>
+        <div style="background:var(--azul-claro); border-radius:8px; padding:12px 14px; font-size:13px; color:#1d4e7d; margin-bottom:16px;">
+            CI: <strong>{{ recep.ci }}</strong> ·
+            Usuario: <strong>{{ recep.username }}</strong>
+        </div>
+        <div class="form-botones">
+            <a href="{{ url_for('admin_empleados') }}" class="boton boton-secundario">Cancelar</a>
+            <button type="submit" class="boton boton-primario">Guardar cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

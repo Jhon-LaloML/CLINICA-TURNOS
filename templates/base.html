@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>{% block titulo %}Clínica San Gabriel{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if session.usuario_id %}
+    <header class="topbar">
+        <div class="topbar-marca">
+            <div class="topbar-logo">+</div>
+            <div>
+                <div class="topbar-titulo">Clínica San Gabriel</div>
+                <div class="topbar-sub">Sistema de Gestión de Turnos</div>
+            </div>
+        </div>
+        <div class="topbar-derecha">
+            <div class="topbar-usuario">
+                <div class="topbar-usuario-nombre">{{ session.username }}</div>
+                <div class="topbar-usuario-rol">{{ session.rol }}</div>
+            </div>
+            <a href="{{ url_for('perfil') }}" class="boton boton-secundario boton-sm">Mi cuenta</a>
+            <a href="{{ url_for('logout') }}" class="boton boton-secundario boton-sm">Cerrar sesión</a>
+        </div>
+    </header>
+    {% endif %}
+
+    <div class="contenedor">
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensaje in mensajes %}
+                <div class="flash flash-{{ categoria }}">{{ mensaje }}</div>
+            {% endfor %}
+        {% endwith %}
+        {% block contenido %}{% endblock %}
+    </div>
+
+    {% if session.usuario_id %}
+    {# ============================================================
+       FOOTER — para quitarlo, borrá las 3 líneas siguientes
+       (desde <footer> hasta </footer>)
+       ============================================================ #}
+    <footer class="footer">
+        Proyecto de Feria Científica FICCT &mdash; Estructura de Datos 1 &mdash; UAGRM
+    </footer>
+    {% endif %}
+</body>
+</html>

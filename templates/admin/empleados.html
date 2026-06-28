@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titulo %}Empleados{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="seccion-cabecera">
+    <div>
+        <h3>Empleados</h3>
+        <p style="color:var(--texto-suave); font-size:14px; margin-top:4px;">Doctores y recepcionistas. Al registrarlos se crea su cuenta de acceso.</p>
+    </div>
+    <a href="{{ url_for('admin_empleado_nuevo_form') }}" class="boton boton-primario">+ Nuevo empleado</a>
+</div>
+
+<div class="panel-titulo" style="margin-bottom:12px;">Doctores</div>
+{% if doctores %}
+<div class="tabla-wrap">
+<table class="tabla" style="margin-bottom:28px;">
+    <thead><tr><th>Nombre</th><th>CI</th><th>Especialidad</th><th>Usuario</th><th>Email</th><th style="width:100px;">Acciones</th></tr></thead>
+    <tbody>
+        {% for d in doctores %}
+        <tr>
+            <td><strong>{{ d.nombre_completo }}</strong></td>
+            <td>{{ d.ci }}</td>
+            <td><span class="pill">{{ d.especialidad_nombre }}</span></td>
+            <td>{{ d.username }}</td>
+            <td>{{ d.email or "—" }}</td>
+            <td><a href="{{ url_for('admin_doctor_editar_form', doctor_id=d.id) }}" class="boton boton-secundario boton-sm">Editar</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado" style="margin-bottom:28px;">Aún no hay doctores registrados.</div>
+{% endif %}
+
+<div class="panel-titulo" style="margin-bottom:12px;">Recepcionistas</div>
+{% if recepcionistas %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead><tr><th>Nombre</th><th>CI</th><th>Turno</th><th>Área</th><th>Usuario</th><th style="width:100px;">Acciones</th></tr></thead>
+    <tbody>
+        {% for r in recepcionistas %}
+        <tr>
+            <td><strong>{{ r.nombre_completo }}</strong></td>
+            <td>{{ r.ci }}</td>
+            <td>{{ r.turno or "—" }}</td>
+            <td>{{ r.area or "—" }}</td>
+            <td>{{ r.username }}</td>
+            <td><a href="{{ url_for('admin_recepcionista_editar_form', recep_id=r.id) }}" class="boton boton-secundario boton-sm">Editar</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="vacio-estado">Aún no hay recepcionistas registrados.</div>
+{% endif %}
+{% endblock %}

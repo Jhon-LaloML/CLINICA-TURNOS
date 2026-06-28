@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Atender cliente{% endblock %}
+{% block contenido %}
+{% include "recepcion/_submenu.html" %}
+<div class="hero"><h2>Atender cliente</h2><p>Busque al cliente por su CI. Si no existe, podrá registrarlo.</p></div>
+<div class="form-inline">
+    <form action="{{ url_for('recepcion_buscar_cliente') }}" method="GET">
+        <div class="form-inline-grid">
+            <div class="campo"><label>Cédula de Identidad</label><input type="text" name="ci" value="{{ ci }}" placeholder="Ej. 1234567" autofocus required></div>
+            <div class="campo" style="display:flex; align-items:flex-end;"><span style="font-size:13px; color:var(--texto-tenue);">Ingrese el CI y presione Buscar.</span></div>
+            <button type="submit" class="boton boton-primario">Buscar</button>
+        </div>
+    </form>
+</div>
+{% if buscado %}
+    {% if cliente %}
+    <div class="panel" style="background:var(--verde-claro); border:1px solid var(--verde);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <div style="font-size:17px; font-weight:600; color:var(--teal-900);">{{ cliente.nombre_completo }}</div>
+                <div style="font-size:14px; color:var(--texto-suave);">CI: {{ cliente.ci }}{% if cliente.telefono %} — Tel: {{ cliente.telefono }}{% endif %}</div>
+                {% if cliente.username %}<div style="font-size:12px; color:var(--teal-600); margin-top:4px;">Cuenta de acceso: {{ cliente.username }}</div>{% endif %}
+            </div>
+            <a href="{{ url_for('recepcion_generar_ficha_form', ci=cliente.ci) }}" class="boton boton-primario">Generar ficha →</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="panel" style="background:var(--ambar-claro); border:1px solid var(--ambar);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div><strong>No se encontró ningún cliente con el CI {{ ci }}.</strong>
+            <div style="font-size:14px; color:var(--texto-suave); margin-top:4px;">Puede registrarlo como cliente nuevo.</div></div>
+            <a href="{{ url_for('recepcion_registrar_cliente_form', ci=ci) }}" class="boton boton-primario">+ Registrar cliente</a>
+        </div>
+    </div>
+    {% endif %}
+{% endif %}
+{% endblock %}

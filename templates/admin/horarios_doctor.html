@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Horarios del doctor{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero">
+    <h2>Horarios de {{ doctor.nombre_completo }}</h2>
+    <p>{{ doctor.especialidad_nombre }} · Indique en qué días, horas y consultorio atiende.</p>
+</div>
+
+{% if horarios %}
+<div class="panel">
+    {% for h in horarios %}
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--fondo); border-radius:8px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <span class="pill">{{ h.dia_nombre }}</span>
+            <span>{{ h.hora_inicio }} - {{ h.hora_fin }}</span>
+            <span style="color:var(--texto-suave);">Consultorio {{ h.consultorio_numero }}</span>
+        </div>
+        <form action="{{ url_for('admin_horario_eliminar', doctor_id=doctor.id, horario_id=h.id) }}" method="POST">
+            <button type="submit" class="boton boton-peligro boton-sm">Quitar</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="vacio-estado" style="margin-bottom:20px;">Este doctor aún no tiene horarios asignados.</div>
+{% endif %}
+
+{% if consultorios %}
+<div class="form-tarjeta">
+    <div class="panel-titulo" style="margin-bottom:16px;">Agregar horario</div>
+    <form action="{{ url_for('admin_horario_agregar', doctor_id=doctor.id) }}" method="POST">
+        <div style="display:grid; grid-template-columns:1.3fr 1fr 1fr 1.3fr auto; gap:12px; align-items:end;">
+            <div class="campo" style="margin-bottom:0;">
+                <label>Día</label>
+                <select name="dia_semana" required>
+                    {% for nombre_dia in dias_semana %}
+                    <option value="{{ loop.index0 }}">{{ nombre_dia }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="campo" style="margin-bottom:0;"><label>Desde</label><input type="time" name="hora_inicio" required></div>
+            <div class="campo" style="margin-bottom:0;"><label>Hasta</label><input type="time" name="hora_fin" required></div>
+            <div class="campo" style="margin-bottom:0;">
+                <label>Consultorio</label>
+                <select name="consultorio_id" required>
+                    {% for c in consultorios %}
+                    <option value="{{ c.id }}">Consultorio {{ c.numero }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="boton boton-primario">Agregar</button>
+        </div>
+    </form>
+</div>
+{% else %}
+<div class="vacio-estado">Primero cree consultorios para poder asignar horarios.</div>
+{% endif %}
+<div style="margin-top:20px;"><a href="{{ url_for('admin_horarios') }}" class="boton boton-secundario">← Volver a la lista</a></div>
+{% endblock %}

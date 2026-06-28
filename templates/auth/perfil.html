@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Mi cuenta{% endblock %}
+{% block contenido %}
+<div class="hero">
+    <h2>Mi cuenta</h2>
+    <p>Actualice su nombre de usuario y su contraseña.</p>
+</div>
+<div class="form-tarjeta" style="margin-bottom:20px;">
+    <div class="panel-titulo" style="margin-bottom:16px;">Cambiar nombre de usuario</div>
+    <form action="{{ url_for('cambiar_username') }}" method="POST">
+        <div class="campo">
+            <label>Nuevo nombre de usuario</label>
+            <input type="text" name="nuevo_username" value="{{ session.username }}" required>
+        </div>
+        <div class="form-botones">
+            <button type="submit" class="boton boton-primario">Guardar usuario</button>
+        </div>
+    </form>
+</div>
+<div class="form-tarjeta">
+    <div class="panel-titulo" style="margin-bottom:16px;">Cambiar contraseña</div>
+    <form action="{{ url_for('cambiar_password') }}" method="POST">
+        <div class="campo">
+            <label>Contraseña actual</label>
+            <input type="password" name="password_actual" required>
+        </div>
+        <div class="form-fila">
+            <div class="campo">
+                <label>Nueva contraseña</label>
+                <input type="password" name="password_nueva" required>
+            </div>
+            <div class="campo">
+                <label>Confirmar nueva contraseña</label>
+                <input type="password" name="password_confirmar" required>
+            </div>
+        </div>
+        <div class="form-botones">
+            <button type="submit" class="boton boton-primario">Guardar contraseña</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

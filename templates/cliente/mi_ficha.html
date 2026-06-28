@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block titulo %}Mi ficha{% endblock %}
+{% block contenido %}
+{% include "cliente/_submenu.html" %}
+<div class="hero"><h2>Mi ficha</h2></div>
+
+{% if ficha %}
+<div style="max-width:480px;">
+    <div class="panel" style="text-align:center; border:2px solid var(--teal-500);">
+        <div style="font-size:12px; letter-spacing:2px; color:var(--texto-tenue);">TU TURNO</div>
+        <div style="font-size:52px; font-weight:800; color:var(--teal-700); line-height:1; margin:10px 0;">{{ ficha.codigo }}</div>
+        <div style="margin-bottom:8px;">{% if ficha.es_prioritario %}<span class="tag tag-prioritario">PRIORITARIO</span>{% else %}<span class="tag tag-regular">REGULAR</span>{% endif %}</div>
+
+        <div id="bloque-estado">
+        {% if ficha.estado == "atendiendo" %}
+            <div style="background:var(--verde-claro); color:#1d6b3c; border-radius:12px; padding:16px; margin:16px 0; font-weight:600; font-size:17px;">¡Es tu turno! Dirígete al Consultorio {{ ficha.consultorio_numero }}</div>
+        {% else %}
+            <div style="background:var(--azul-claro); color:#1d4e7d; border-radius:12px; padding:16px; margin:16px 0;">
+                <div style="font-size:44px; font-weight:800; color:var(--teal-700);">{{ faltan if faltan is not none else 0 }}</div>
+                <div style="font-size:14px;">{% if faltan and faltan > 0 %}personas antes que tú{% else %}¡Eres el siguiente! Mantente atento{% endif %}</div>
+            </div>
+        {% endif %}
+        </div>
+
+        <div style="text-align:left; margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Consultorio</span><span style="font-weight:600;">Consultorio {{ ficha.consultorio_numero }}</span></div>
+            {% if consultorio_info %}
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Doctor</span><span style="font-weight:600;">Dr(a). {{ consultorio_info.doctor_nombre }}</span></div>
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Especialidad</span><span style="font-weight:600;">{{ consultorio_info.especialidad }}</span></div>
+            {% endif %}
+            {% if ficha.motivo %}<div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Motivo</span><span style="font-weight:600;">{{ ficha.motivo }}</span></div>{% endif %}
+            <div style="display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid var(--borde); font-size:14px;"><span style="color:var(--texto-suave);">Total en espera</span><span style="font-weight:600;" id="total-espera">{{ en_espera }}</span></div>
+        </div>
+    </div>
+    <p style="text-align:center; font-size:12px; color:var(--texto-tenue); margin-top:8px;">Esta página se actualiza sola cada 5 segundos.</p>
+</div>
+
+<script>
+async function actualizar() {
+    try {
+        const r = await fetch("{{ url_for('api_mi_ficha') }}");
+        const d = await r.json();
+        if (!d.tiene_ficha) { location.reload(); return; }
+        const bloque = document.getElementById('bloque-estado');
+        if (d.es_su_turno) {
+            bloque.innerHTML = '<div style="background:var(--verde-claro); color:#1d6b3c; border-radius:12px; padding:16px; margin:16px 0; font-weight:600; font-size:17px;">¡Es tu turno! Dirígete al Consultorio ' + d.consultorio_numero + '</div>';
+        } else {
+            const f = d.faltan === null ? 0 : d.faltan;
+            const txt = f > 0 ? 'personas antes que tú' : '¡Eres el siguiente! Mantente atento';
+            bloque.innerHTML = '<div style="background:var(--azul-claro); color:#1d4e7d; border-radius:12px; padding:16px; margin:16px 0;"><div style="font-size:44px; font-weight:800; color:var(--teal-700);">' + f + '</div><div style="font-size:14px;">' + txt + '</div></div>';
+        }
+        document.getElementById('total-espera').textContent = d.en_espera;
+    } catch(e) { console.error(e); }
+}
+setInterval(actualizar, 5000);
+</script>
+
+{% else %}
+<div class="vacio-estado">
+    <strong>No tienes una ficha activa hoy.</strong><br><br>
+    Acércate a recepción para que te asignen un turno. Aquí podrás ver cuántas personas faltan antes que tú.
+</div>
+{% endif %}
+{% endblock %}

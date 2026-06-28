@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block titulo %}Clientes registrados{% endblock %}
+{% block contenido %}
+{% include "recepcion/_submenu.html" %}
+<div class="seccion-cabecera">
+    <div>
+        <h3>Clientes registrados</h3>
+        <p style="color:var(--texto-suave); font-size:14px; margin-top:4px;">Lista de todos los pacientes del sistema (solo visualización).</p>
+    </div>
+    <span class="pill">{{ clientes|length }} en total</span>
+</div>
+
+<!-- Buscador rápido -->
+<div class="form-inline" style="margin-bottom:20px;">
+    <form action="{{ url_for('recepcion_lista_clientes') }}" method="GET">
+        <div class="form-inline-grid">
+            <div class="campo" style="margin-bottom:0;">
+                <label>Buscar por nombre o CI</label>
+                <input type="text" name="q" value="{{ q }}" placeholder="Ej. Juan o 1234567" autofocus>
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:8px;">
+                <button type="submit" class="boton boton-primario">Buscar</button>
+                {% if q %}<a href="{{ url_for('recepcion_lista_clientes') }}" class="boton boton-secundario">Limpiar</a>{% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if clientes %}
+<div class="tabla-wrap">
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Nombre completo</th>
+            <th>CI</th>
+            <th>Teléfono</th>
+            <th>Cuenta de acceso</th>
+            <th style="width:160px;">Acción rápida</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in clientes %}
+        <tr>
+            <td><strong>{{ c.nombre_completo }}</strong></td>
+            <td>{{ c.ci }}</td>
+            <td>{{ c.telefono or "—" }}</td>
+            <td>
+                {% if c.username %}
+                    <span class="pill">{{ c.username }}</span>
+                {% else %}
+                    <span style="color:var(--texto-tenue); font-size:13px;">Sin cuenta</span>
+                {% endif %}
+            </td>
+            <td>
+                <!-- Atajo directo para generar ficha -->
+                <a href="{{ url_for('recepcion_generar_ficha_form', ci=c.ci) }}"
+                   class="boton boton-primario boton-sm">Generar ficha</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% elif q %}
+<div class="vacio-estado">No se encontraron clientes con "<strong>{{ q }}</strong>".</div>
+{% else %}
+<div class="vacio-estado">Aún no hay clientes registrados.</div>
+{% endif %}
+{% endblock %}

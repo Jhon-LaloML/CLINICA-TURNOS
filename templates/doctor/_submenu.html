@@ -1,0 +1,4 @@
+<nav class="submenu">
+    <a href="{{ url_for('doctor_dashboard') }}" class="{% if request.endpoint == 'doctor_dashboard' %}activo{% endif %}">Mi consultorio</a>
+    <a href="{{ url_for('doctor_historial') }}" class="{% if request.endpoint == 'doctor_historial' %}activo{% endif %}">Mi historial</a>
+</nav>

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Generar ficha{% endblock %}
+{% block contenido %}
+{% include "recepcion/_submenu.html" %}
+<div class="hero"><h2>Generar ficha</h2><p>Para <strong>{{ cliente.nombre_completo }}</strong> (CI: {{ cliente.ci }}).</p></div>
+
+{% if ficha_activa %}
+<div class="panel" style="background:var(--ambar-claro); border:1px solid var(--ambar);">
+    <strong>Este cliente ya tiene una ficha activa hoy:</strong> {{ ficha_activa.codigo }} en el Consultorio {{ ficha_activa.consultorio_numero }} ({{ ficha_activa.estado }}).
+    <div style="font-size:14px; margin-top:4px;">Debe ser atendido o marcado ausente antes de generar otra.</div>
+</div>
+{% elif consultorios_activos %}
+<div class="form-tarjeta" style="max-width:720px;">
+    <form action="{{ url_for('recepcion_generar_ficha') }}" method="POST">
+        <input type="hidden" name="cliente_id" value="{{ cliente.id }}">
+        <div class="campo">
+            <label>Consultorio <span style="color:var(--coral)">*</span></label>
+            <select name="consultorio_id" required>
+                <option value="">— Seleccione el consultorio —</option>
+                {% for esp, lista in por_especialidad.items() %}
+                <optgroup label="{{ esp }}">
+                    {% for c in lista %}
+                    <option value="{{ c.consultorio_id }}">Consultorio {{ c.consultorio_numero }} — Dr(a). {{ c.doctor_nombre }} ({{ c.en_espera }} en espera)</option>
+                    {% endfor %}
+                </optgroup>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="campo">
+            <label>Tipo de atención <span style="color:var(--coral)">*</span></label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <label style="cursor:pointer; border:2px solid var(--borde); border-radius:12px; padding:14px; display:flex; gap:10px; align-items:flex-start;">
+                    <input type="radio" name="tipo" value="regular" checked style="width:auto; margin-top:3px;">
+                    <div><div style="font-weight:600;">Regular</div><div style="font-size:12px; color:var(--texto-tenue);">Por orden de llegada</div></div>
+                </label>
+                <label style="cursor:pointer; border:2px solid var(--borde); border-radius:12px; padding:14px; display:flex; gap:10px; align-items:flex-start;">
+                    <input type="radio" name="tipo" value="prioritario" style="width:auto; margin-top:3px;">
+                    <div><div style="font-weight:600;">Prioritario</div><div style="font-size:12px; color:var(--texto-tenue);">Adulto mayor, embarazada, emergencia</div></div>
+                </label>
+            </div>
+        </div>
+        <div class="campo"><label>Motivo de consulta (opcional)</label><textarea name="motivo" rows="2" placeholder="Ej. Control, dolor..."></textarea></div>
+        <div class="form-botones">
+            <a href="{{ url_for('recepcion_buscar_cliente') }}" class="boton boton-secundario">Cancelar</a>
+            <button type="submit" class="boton boton-primario">Generar ficha</button>
+        </div>
+    </form>
+</div>
+{% else %}
+<div class="vacio-estado"><strong>No hay consultorios atendiendo hoy.</strong></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+<nav class="submenu">
+    <a href="{{ url_for('recepcion_dashboard') }}" class="{% if request.endpoint == 'recepcion_dashboard' %}activo{% endif %}">Tablero del día</a>
+    <a href="{{ url_for('recepcion_buscar_cliente') }}" class="{% if request.endpoint in ['recepcion_buscar_cliente','recepcion_registrar_cliente_form','recepcion_generar_ficha_form'] %}activo{% endif %}">Atender cliente</a>
+    <a href="{{ url_for('recepcion_lista_clientes') }}" class="{% if request.endpoint == 'recepcion_lista_clientes' %}activo{% endif %}">Clientes</a>
+    <a href="{{ url_for('recepcion_ver_colas') }}" class="{% if request.endpoint == 'recepcion_ver_colas' %}activo{% endif %}">Ver colas</a>
+</nav>

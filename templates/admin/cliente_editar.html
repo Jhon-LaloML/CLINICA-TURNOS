@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Editar cliente{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero">
+    <h2>Editar cliente</h2>
+    <p>Modificando datos de <strong>{{ cliente.nombre_completo }}</strong> (CI: {{ cliente.ci }})</p>
+</div>
+<div class="form-tarjeta">
+    <form action="{{ url_for('admin_cliente_editar', cliente_id=cliente.id) }}" method="POST">
+        <div class="form-fila">
+            <div class="campo">
+                <label>Nombre <span style="color:var(--coral)">*</span></label>
+                <input type="text" name="nombre" value="{{ cliente.nombre }}" required>
+            </div>
+            <div class="campo">
+                <label>Apellido <span style="color:var(--coral)">*</span></label>
+                <input type="text" name="apellido" value="{{ cliente.apellido }}" required>
+            </div>
+        </div>
+        <div class="campo">
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" value="{{ cliente.telefono or '' }}">
+        </div>
+        {% if cliente.username %}
+        <div style="background:var(--azul-claro); border-radius:8px; padding:12px 14px; font-size:13px; color:#1d4e7d; margin-bottom:16px;">
+            Usuario de acceso: <strong>{{ cliente.username }}</strong>
+            (el cliente puede cambiarlo desde "Mi cuenta")
+        </div>
+        {% endif %}
+        <div class="form-botones">
+            <a href="{{ url_for('admin_clientes') }}" class="boton boton-secundario">Cancelar</a>
+            <button type="submit" class="boton boton-primario">Guardar cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

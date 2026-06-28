@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo empleado{% endblock %}
+{% block contenido %}
+{% include "admin/_submenu.html" %}
+<div class="hero">
+    <h2>Nuevo empleado</h2>
+    <p>El sistema generará su usuario (primer nombre) y contraseña (su CI) automáticamente.</p>
+</div>
+<div class="form-tarjeta">
+    <form action="{{ url_for('admin_empleado_crear') }}" method="POST">
+        <div class="campo">
+            <label>Tipo de empleado <span style="color:var(--coral)">*</span></label>
+            <select name="tipo_empleado" id="tipo_empleado" required onchange="toggleCampos()">
+                <option value="">— Seleccione —</option>
+                <option value="doctor">Doctor</option>
+                <option value="recepcionista">Recepcionista</option>
+            </select>
+        </div>
+        <div class="form-fila">
+            <div class="campo"><label>Nombre <span style="color:var(--coral)">*</span></label><input type="text" name="nombre" required></div>
+            <div class="campo"><label>Apellido <span style="color:var(--coral)">*</span></label><input type="text" name="apellido" required></div>
+        </div>
+        <div class="form-fila">
+            <div class="campo"><label>Cédula de Identidad <span style="color:var(--coral)">*</span></label><input type="text" name="ci" required></div>
+            <div class="campo"><label>Teléfono</label><input type="tel" name="telefono"></div>
+        </div>
+        <div class="campo"><label>Dirección</label><input type="text" name="direccion"></div>
+
+        <!-- Campos solo para DOCTOR -->
+        <div id="campos-doctor" style="display:none;">
+            <div class="form-fila">
+                <div class="campo">
+                    <label>Especialidad <span style="color:var(--coral)">*</span></label>
+                    <select name="especialidad_id">
+                        <option value="">— Seleccione —</option>
+                        {% for esp in especialidades %}
+                        <option value="{{ esp.id }}">{{ esp.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="campo"><label>Email</label><input type="email" name="email"></div>
+            </div>
+        </div>
+
+        <!-- Campos solo para RECEPCIONISTA -->
+        <div id="campos-recepcionista" style="display:none;">
+            <div class="form-fila">
+                <div class="campo"><label>Turno</label><input type="text" name="turno" placeholder="Ej. Mañana"></div>
+                <div class="campo"><label>Área</label><input type="text" name="area" placeholder="Ej. Recepción general"></div>
+            </div>
+        </div>
+
+        <div class="form-botones">
+            <a href="{{ url_for('admin_empleados') }}" class="boton boton-secundario">Cancelar</a>
+            <button type="submit" class="boton boton-primario">Registrar empleado</button>
+        </div>
+    </form>
+</div>
+<script>
+    function toggleCampos() {
+        var tipo = document.getElementById('tipo_empleado').value;
+        document.getElementById('campos-doctor').style.display = (tipo === 'doctor') ? 'block' : 'none';
+        document.getElementById('campos-recepcionista').style.display = (tipo === 'recepcionista') ? 'block' : 'none';
+    }
+</script>
+{% endblock %}
